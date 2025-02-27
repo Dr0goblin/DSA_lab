@@ -7,9 +7,8 @@ void printArray(int arr[], int n) {
     }
     cout << endl;
 }
-
-void heapify(int arr[], int n, int i) {
-    int largest = i;  
+void maxHeapify(int arr[], int n, int i) {
+    int largest = i;
     int left = 2 * i + 1;
     int right = 2 * i + 2;
 
@@ -21,30 +20,48 @@ void heapify(int arr[], int n, int i) {
 
     if (largest != i) {
         swap(arr[i], arr[largest]);
-        cout << "Heapify: ";
-        printArray(arr, n);
-        heapify(arr, n, largest);
+        maxHeapify(arr, n, largest);
+    }
+}
+void minHeapify(int arr[], int n, int i) {
+    int smallest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+
+    if (left < n && arr[left] < arr[smallest])
+        smallest = left;
+
+    if (right < n && arr[right] < arr[smallest])
+        smallest = right;
+
+    if (smallest != i) {
+        swap(arr[i], arr[smallest]);
+        minHeapify(arr, n, smallest);
     }
 }
 
-void heapSort(int arr[], int n) {
-    for (int i = n / 2 - 1; i >= 0; i--) {
-        heapify(arr, n, i);
-    }
-
-    cout << "Max Heap built: ";
-    printArray(arr, n);
+void heapSortMax(int arr[], int n) {
+    for (int i = n / 2 - 1; i >= 0; i--)
+        maxHeapify(arr, n, i);
 
     for (int i = n - 1; i > 0; i--) {
         swap(arr[0], arr[i]);
-        cout << "Extract Max (" << arr[i] << "): ";
-        printArray(arr, n);
-        heapify(arr, i, 0);
+        maxHeapify(arr, i, 0);
+    }
+}
+
+void heapSortMin(int arr[], int n) {
+    for (int i = n / 2 - 1; i >= 0; i--)
+        minHeapify(arr, n, i);
+
+    for (int i = n - 1; i > 0; i--) {
+        swap(arr[0], arr[i]);
+        minHeapify(arr, i, 0);
     }
 }
 
 int main() {
-    int n;
+    int n, choice;
     cout << "Enter the number of elements: ";
     cin >> n;
 
@@ -54,14 +71,29 @@ int main() {
         cin >> arr[i];
     }
 
-    cout << "Original array: ";
-    printArray(arr, n);
+    cout << "Choose Sorting Type:\n";
+    cout << "1. Max Heap (Sort in Ascending Order)\n";
+    cout << "2. Min Heap (Sort in Descending Order)\n";
+    cout << "Enter your choice (1 or 2): ";
+    cin >> choice;
 
-    heapSort(arr, n);
-
-    cout << "Sorted array: ";
-    printArray(arr, n);
+    if (choice == 1) {
+        heapSortMax(arr, n);
+        cout << "Sorted Array (Ascending Order): ";
+        printArray(arr, n);
+        cout << "Minimum Element: " << arr[0] << endl;
+        cout << "Maximum Element: " << arr[n - 1] << endl;
+    } 
+    else if (choice == 2) {
+        heapSortMin(arr, n);
+        cout << "Sorted Array (Descending Order): ";
+        printArray(arr, n);
+        cout << "Minimum Element: " << arr[n - 1] << endl;
+        cout << "Maximum Element: " << arr[0] << endl;
+    } 
+    else {
+        cout << "Invalid choice! Please enter 1 or 2." << endl;
+    }
 
     return 0;
 }
-
